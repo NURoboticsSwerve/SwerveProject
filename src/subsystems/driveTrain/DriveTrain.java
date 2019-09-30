@@ -59,5 +59,14 @@ public class DriveTrain extends Subsystem {
     public void loopTasks() {
 
     }
+    
+    //Sets how many volts are being sent to motor
+    public void setMotorPercentage() {
+    
+    }
+   //Gets the current velocity of the robot
+    public void getCurrentVelocity() {
+
+    }
 
 }
