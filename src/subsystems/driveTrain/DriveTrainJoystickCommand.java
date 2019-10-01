@@ -1,6 +1,10 @@
 package subsystems.driveTrain;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import looper.DefaultCommand;
+import network.TCPClient;
 
 public class DriveTrainJoystickCommand extends DefaultCommand {
 
@@ -10,12 +14,12 @@ public class DriveTrainJoystickCommand extends DefaultCommand {
 
     @Override
     public void onStart() {
-
+        
     }
 
     @Override
     public void onLoop() {
-
+        
     }
 
     @Override

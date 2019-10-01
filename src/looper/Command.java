@@ -1,16 +1,23 @@
 package looper;
 
 public abstract class Command {
-
+    
+    private Subsystem subsystem;
+    
     /**
      * Constructor that sets current command of subsystem involved to this command
      * @param subsystem
      *      Subsystem this command uses
      */
     public Command(Subsystem subsystem) {
-        subsystem.setCurrentCommand(this);
+        this.subsystem = subsystem;
     }
-
+    
+    // Returns what subysystem the Command belongs to
+    public Subsystem getSubsystem(){
+        return subsystem;
+    }
+    
     // What to do when the command is started
     public abstract void onStart();
 

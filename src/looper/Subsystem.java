@@ -55,8 +55,15 @@ public abstract class Subsystem {
      *      The command to set as the current
      */
     public void setCurrentCommand(Command command) {
-        this.currentCommand = command;
-        setCurrentCommandState(NOT_STARTED);
+        if (command.getSubsystem() instanceof Subsystem) {
+            this.currentCommand.onEnd();
+            this.currentCommand = command;
+            setCurrentCommandState(NOT_STARTED);
+        }
+        else {
+            System.err.println(command.toString() + " cannot be run by " + 
+                    this.toString());
+        } 
     }
 
     /**
