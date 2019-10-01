@@ -68,5 +68,10 @@ public class DriveTrain extends Subsystem {
     public void getCurrentVelocity() {
 
     }
+    
+    //Adds a point on the Volatage/Velocity graph
+    public void plotVoltageVelocity() {
+    
+    }
 
 }
