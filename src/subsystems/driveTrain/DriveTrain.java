@@ -64,6 +64,12 @@ public class DriveTrain extends Subsystem {
     public void setMotorPercentage() {
     
     }
+    
+    //Sets how far the robot should move
+    public void setMovementDistance() {
+        
+    }
+    
    //Gets the current velocity of the robot
     public void getCurrentVelocity() {
 
