@@ -7,7 +7,7 @@ public class OI {
     private OI() {
 
         // TODO: Initialize joysticks
-
+ 
     }
 
     public static OI getInstance() {
@@ -16,10 +16,11 @@ public class OI {
         }
         return singleton;
     }
-
+   
     private synchronized static void init() {
         if (singleton == null) {
             singleton = new OI();
         }
     }
+    
 }

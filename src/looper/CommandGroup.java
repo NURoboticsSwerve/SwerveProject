@@ -5,24 +5,24 @@ import java.util.ArrayList;
 /**
  *  Allows groups of commands to be run in series or in parallel
  */
-public class CommandGroup {
+public abstract class CommandGroup {
     
     private ArrayList<Command> commandQueue;
+    private ArrayList<Character> commandTypeQueue;
     
     public CommandGroup() {
-        commandQueue = new ArrayList<Command>();
+        commandQueue = new ArrayList<>();
+        commandTypeQueue = new ArrayList<>();
     }
     
     public void addSequential(Command command) {
-        for (Command c : commandQueue) {
-            c.getSubsystem().setCurrentCommand(c);
-        }
-        commandQueue.clear();
-        command.getSubsystem().setCurrentCommand(command);
+        commandQueue.add(command);
+        commandTypeQueue.add('s');
     }
     
     public void addParallel(Command command) {
         commandQueue.add(command);
+        commandTypeQueue.add('p');
     }
-    
+
 }

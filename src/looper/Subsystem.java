@@ -22,6 +22,10 @@ public abstract class Subsystem {
         subsystems.add(this);
     }
 
+    // Queues for commands
+    private ArrayList<Command> commandQueue = new ArrayList<>();
+    private ArrayList<Character> commandTypeQueue = new ArrayList<>();
+    
     // Enable and Disable classes must exist
     public abstract void enable();
     public abstract void disable();
@@ -83,6 +87,60 @@ public abstract class Subsystem {
     public DefaultCommand getDefaultCommand() {
         return defaultCommand;
     }
+    
+    /**
+     * Removes current command from command queues
+     */
+    public void delCurCommand() {
+        commandQueue.remove(0);
+        commandTypeQueue.remove(0);
+    }
+    
+    /**
+     * Clears the command queue
+     */
+    public void delAllCommands() {
+        commandQueue.clear();
+        commandTypeQueue.clear();
+    }
+    
+    /**
+     * Adds command to end of command queues
+     * @param command
+     *      The command to add to the end of the queue
+     * @param type 
+     *      The type of the command
+     */
+    public void addCommand(Command command, char type) {
+        commandQueue.add(command);
+        commandTypeQueue.add(type);
+    }
+    
+    /**
+     * Returns the next command in the commandQueue
+     * @return
+     *      Next command in the command queue
+     */
+    public Command getNextCommand() {
+        if (hasCommands())
+            return commandQueue.get(0);
+        System.err.println("No next command in command queue");
+        return null;
+    }
+    
+    public int getNextSequentialCommand() {
+        // TODO: Implement this function
+        return 0;
+    }
+    
+    /**
+     * Checks whether the command queue has more items
+     * @return
+     *      Boolean whether the command queue is empty
+     */
+    public boolean hasCommands() {
+        return !commandQueue.isEmpty();
+    }
 
     // Integer keeping track of current command state
     private int currentCommandState = NOT_STARTED;
@@ -96,6 +154,9 @@ public abstract class Subsystem {
         currentCommandState = state;
     }
 
+    /*
+    Returns the current state of the running command
+    */
     public int getCurrentCommandState() {
         return currentCommandState;
     }

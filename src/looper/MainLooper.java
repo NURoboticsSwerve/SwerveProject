@@ -35,11 +35,13 @@ public class MainLooper extends TimerTask {
     public void run() {
 
         // Run for every subsystem
-        for (Subsystem subsystem : Subsystem.subsystems) {
+        for(Subsystem subsystem : Subsystem.subsystems) {
 
-            boolean shouldSwitchToDefault = subsystem.getDefaultCommand().shouldSwitchToDefaultCommand()
-                    || subsystem.getCurrentCommand().isFinished();
-            if (shouldSwitchToDefault) {
+            //int nextSequential = subsystem.
+            
+            boolean shouldSwitchToDefault = subsystem.getDefaultCommand().shouldSwitchToDefaultCommand();
+            boolean shouldSwitchToNext = subsystem.getCurrentCommand().isFinished();
+            if (shouldSwitchToDefault || shouldSwitchToNext) {
                 subsystem.setCurrentCommandState(Subsystem.ENDING);
             }
 
@@ -53,16 +55,32 @@ public class MainLooper extends TimerTask {
 
             // If the subsystem is running
             //      Run onLoop
-            else if (subsystem.getCurrentCommandState() == Subsystem.RUNNING) {
+            if (subsystem.getCurrentCommandState() == Subsystem.RUNNING) {
                 subsystem.getCurrentCommand().onLoop();
             }
 
             // If the subsystem is about to end
             //      Run onEnd
             //      Set current command to the default command
-            else if (subsystem.getCurrentCommandState() == Subsystem.ENDING) {
+            if (subsystem.getCurrentCommandState() == Subsystem.ENDING) {
                 subsystem.getCurrentCommand().onEnd();
-                subsystem.setCurrentCommand(subsystem.getDefaultCommand());
+                
+                if (shouldSwitchToNext)
+                    subsystem.delCurCommand();
+                
+                if (!subsystem.hasCommands())
+                    shouldSwitchToDefault = true;
+                
+                if (shouldSwitchToDefault) {
+                    subsystem.delAllCommands();
+                    subsystem.setCurrentCommand(subsystem.getDefaultCommand());
+                }
+                if (shouldSwitchToNext) {
+                    subsystem.setCurrentCommand(subsystem.getNextCommand());
+                }
+                else{
+                    System.err.println("Command ending without another command to switch to");
+                }
             }
 
             // Run through loop tasks of subsystem
