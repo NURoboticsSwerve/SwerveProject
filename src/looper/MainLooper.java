@@ -36,8 +36,6 @@ public class MainLooper extends TimerTask {
 
         // Run for every subsystem
         for(Subsystem subsystem : Subsystem.subsystems) {
-
-            //int nextSequential = subsystem.
             
             boolean shouldSwitchToDefault = subsystem.getDefaultCommand().shouldSwitchToDefaultCommand();
             boolean shouldSwitchToNext = subsystem.getCurrentCommand().isFinished();
@@ -74,8 +72,8 @@ public class MainLooper extends TimerTask {
                 if (shouldSwitchToDefault) {
                     subsystem.delAllCommands();
                     subsystem.setCurrentCommand(subsystem.getDefaultCommand());
-                }
-                if (shouldSwitchToNext) {
+                } 
+                else if (shouldSwitchToNext) {
                     subsystem.setCurrentCommand(subsystem.getNextCommand());
                 }
                 else{

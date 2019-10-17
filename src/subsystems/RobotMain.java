@@ -43,7 +43,6 @@ public class RobotMain {
             Logger.getLogger(RobotMain.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        OI.getInstance();
         DriveTrain.getInstance();
     }
 

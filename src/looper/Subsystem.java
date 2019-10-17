@@ -24,7 +24,6 @@ public abstract class Subsystem {
 
     // Queues for commands
     private ArrayList<Command> commandQueue = new ArrayList<>();
-    private ArrayList<Character> commandTypeQueue = new ArrayList<>();
     
     // Enable and Disable classes must exist
     public abstract void enable();
@@ -43,6 +42,9 @@ public abstract class Subsystem {
     // This is the command that is running
     private Command currentCommand;
 
+    // Integer keeping track of current command state
+    private int currentCommandState = NOT_STARTED;
+    
     /**
      * Sets the default command of the subsystem
      * @param defaultCommand
@@ -93,7 +95,6 @@ public abstract class Subsystem {
      */
     public void delCurCommand() {
         commandQueue.remove(0);
-        commandTypeQueue.remove(0);
     }
     
     /**
@@ -101,19 +102,15 @@ public abstract class Subsystem {
      */
     public void delAllCommands() {
         commandQueue.clear();
-        commandTypeQueue.clear();
     }
     
     /**
      * Adds command to end of command queues
      * @param command
      *      The command to add to the end of the queue
-     * @param type 
-     *      The type of the command
      */
-    public void addCommand(Command command, char type) {
+    public void addCommand(Command command) {
         commandQueue.add(command);
-        commandTypeQueue.add(type);
     }
     
     /**
@@ -128,11 +125,6 @@ public abstract class Subsystem {
         return null;
     }
     
-    public int getNextSequentialCommand() {
-        // TODO: Implement this function
-        return 0;
-    }
-    
     /**
      * Checks whether the command queue has more items
      * @return
@@ -141,9 +133,6 @@ public abstract class Subsystem {
     public boolean hasCommands() {
         return !commandQueue.isEmpty();
     }
-
-    // Integer keeping track of current command state
-    private int currentCommandState = NOT_STARTED;
 
     /**
      * Sets the state of the current command
