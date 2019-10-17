@@ -1,25 +1,35 @@
 package oi;
 
-public class OI {
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
-    private static OI singleton;
+public class OI {
+    private DataInputStream controllerData;
+    private static final String DATAFILE = "/dev/input/js0";
 
     private OI() {
-
-        // TODO: Initialize joysticks
-
-    }
-
-    public static OI getInstance() {
-        if (singleton == null) {
-            init();
+        try {
+            FileInputStream fstream = new FileInputStream(OI.DATAFILE);
+            this.controllerData = new DataInputStream(new BufferedInputStream(fstream));
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
         }
-        return singleton;
     }
-
-    private synchronized static void init() {
-        if (singleton == null) {
-            singleton = new OI();
-        }
+    
+    // horizontal component of the right joystick
+    public int getRightX() {
+        return 0;   // temp
+    }
+    
+    // horizontal component of the left joystick
+    public int getLeftX() {
+        return 0;   // temp
+    }
+    
+    // vertical component of the left joystick
+    public int getLeftY() {
+        return 0;   // temp
     }
 }
