@@ -32,8 +32,7 @@ public class RobotMain {
      */
     public RobotMain() {
         singleton = this;
-
-        OI.getInstance();
+        
         DriveTrain.getInstance();
     }
 

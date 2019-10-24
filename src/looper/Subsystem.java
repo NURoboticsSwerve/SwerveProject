@@ -22,6 +22,9 @@ public abstract class Subsystem {
         subsystems.add(this);
     }
 
+    // Queues for commands
+    private ArrayList<Command> commandQueue = new ArrayList<>();
+    
     // Enable and Disable classes must exist
     public abstract void enable();
     public abstract void disable();
@@ -39,6 +42,9 @@ public abstract class Subsystem {
     // This is the command that is running
     private Command currentCommand;
 
+    // Integer keeping track of current command state
+    private int currentCommandState = NOT_STARTED;
+    
     /**
      * Sets the default command of the subsystem
      * @param defaultCommand
@@ -55,8 +61,15 @@ public abstract class Subsystem {
      *      The command to set as the current
      */
     public void setCurrentCommand(Command command) {
-        this.currentCommand = command;
-        setCurrentCommandState(NOT_STARTED);
+        if (command.getSubsystem() instanceof Subsystem) {
+            this.currentCommand.onEnd();
+            this.currentCommand = command;
+            setCurrentCommandState(NOT_STARTED);
+        }
+        else {
+            System.err.println(command.toString() + " cannot be run by " + 
+                    this.toString());
+        } 
     }
 
     /**
@@ -76,9 +89,50 @@ public abstract class Subsystem {
     public DefaultCommand getDefaultCommand() {
         return defaultCommand;
     }
-
-    // Integer keeping track of current command state
-    private int currentCommandState = NOT_STARTED;
+    
+    /**
+     * Removes current command from command queues
+     */
+    public void delCurCommand() {
+        commandQueue.remove(0);
+    }
+    
+    /**
+     * Clears the command queue
+     */
+    public void delAllCommands() {
+        commandQueue.clear();
+    }
+    
+    /**
+     * Adds command to end of command queues
+     * @param command
+     *      The command to add to the end of the queue
+     */
+    public void addCommand(Command command) {
+        commandQueue.add(command);
+    }
+    
+    /**
+     * Returns the next command in the commandQueue
+     * @return
+     *      Next command in the command queue
+     */
+    public Command getNextCommand() {
+        if (hasCommands())
+            return commandQueue.get(0);
+        System.err.println("No next command in command queue");
+        return null;
+    }
+    
+    /**
+     * Checks whether the command queue has more items
+     * @return
+     *      Boolean whether the command queue is empty
+     */
+    public boolean hasCommands() {
+        return !commandQueue.isEmpty();
+    }
 
     /**
      * Sets the state of the current command
@@ -89,6 +143,9 @@ public abstract class Subsystem {
         currentCommandState = state;
     }
 
+    /*
+    Returns the current state of the running command
+    */
     public int getCurrentCommandState() {
         return currentCommandState;
     }
