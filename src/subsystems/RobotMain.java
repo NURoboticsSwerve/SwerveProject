@@ -1,9 +1,5 @@
 package subsystems;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import network.TCPClient;
 import oi.OI;
 import subsystems.driveTrain.DriveTrain;
 
@@ -36,12 +32,6 @@ public class RobotMain {
      */
     public RobotMain() {
         singleton = this;
-
-        try {
-            TCPClient.getInstance();
-        } catch (IOException ex) {
-            Logger.getLogger(RobotMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
         DriveTrain.getInstance();
     }

@@ -15,7 +15,7 @@ public class MainLooper extends TimerTask {
 
     // In main, create new looper
     public static void main(String[] args) {
-        new MainLooper();
+        MainLooper mainLooper = new MainLooper();
     }
     
     /**
@@ -28,7 +28,7 @@ public class MainLooper extends TimerTask {
         RobotMain.getInstance();
         
         mainTimer = new Timer();
-        mainTimer.scheduleAtFixedRate(this, 0, PERIOD_MS);
+        mainTimer.schedule(this, (long) 0, PERIOD_MS);
     }
 
     @Override
@@ -37,7 +37,8 @@ public class MainLooper extends TimerTask {
         // Run for every subsystem
         for(Subsystem subsystem : Subsystem.subsystems) {
             
-            boolean shouldSwitchToDefault = subsystem.getDefaultCommand().shouldSwitchToDefaultCommand();
+            boolean shouldSwitchToDefault = subsystem.getDefaultCommand().shouldSwitchToDefaultCommand()
+                    && subsystem.hasCommands();
             boolean shouldSwitchToNext = subsystem.getCurrentCommand().isFinished();
             if (shouldSwitchToDefault || shouldSwitchToNext) {
                 subsystem.setCurrentCommandState(Subsystem.ENDING);
@@ -75,6 +76,7 @@ public class MainLooper extends TimerTask {
                 } 
                 else if (shouldSwitchToNext) {
                     subsystem.setCurrentCommand(subsystem.getNextCommand());
+                    subsystem.setCurrentCommandState(Subsystem.NOT_STARTED);
                 }
                 else{
                     System.err.println("Command ending without another command to switch to");
