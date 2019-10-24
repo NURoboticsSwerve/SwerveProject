@@ -1,11 +1,7 @@
 package oi;
 
-public class OI {
+public class OI() {
 
-    private OI() {
 
         // TODO: Initialize joysticks
- 
-    }
-    
 }
