@@ -9,9 +9,11 @@ import subsystems.driveTrain.DriveTrain;
 public class RobotMain {
 
     private static RobotMain singleton;
-
+    private boolean botEnabled = false;
+    
     /**
      * Get instance of the robot, returning singleton
+     * @return 
      */
     public static RobotMain getInstance() {
         if (singleton == null) {
@@ -36,12 +38,33 @@ public class RobotMain {
         DriveTrain.getInstance();
     }
 
-
-    public void enableInit() {
-
+    /**
+    * Enable the robot by changing botEnabled to true
+    */
+    public void enable() {
+        botEnabled = true;
     }
 
-    public void disableInit() {
-
+    /**
+     * Disable the robot by changing botEnabled to false
+     */
+    public void disable() {
+        botEnabled = false;
+    }
+    
+    /**
+     * Is the robot enabled or not
+     * @return botEnabled
+     */
+    public boolean isEnabled() {
+        return botEnabled;
+    }
+    
+    /**
+    * Performs tasks that should be completed once per code cycle
+    * Accounts for all loop tasks that don't belong to a specific subsystem
+    */
+    public void mainLoopTasks() {
+        
     }
 }
