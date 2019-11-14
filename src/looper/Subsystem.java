@@ -68,7 +68,6 @@ public abstract class Subsystem {
      */
     public void setCurrentCommand(Command command) {
         if (command.getSubsystem() instanceof Subsystem) {
-            this.currentCommand.onEnd();
             this.currentCommand = command;
             setCurrentCommandState(NOT_STARTED);
         }

@@ -37,6 +37,7 @@ public class MainLooper extends TimerTask {
         // Run for every subsystem
         for(Subsystem subsystem : Subsystem.subsystems) {
             
+            // Only run through commands if robot is enabled
             if (RobotMain.getInstance().isEnabled()) {
                 if (!subsystem.isEnabled())
                     subsystem.enable();
@@ -89,9 +90,13 @@ public class MainLooper extends TimerTask {
                 
             }
             
+            // Robot is not enabled
             else {
-                if (subsystem.isEnabled())
-                    subsystem.disable();
+                if (subsystem.isEnabled()) {
+                    subsystem.disable();        // Make sure to disable subsystem
+                    subsystem.delAllCommands(); // Clear the command queue so default is next
+                    subsystem.setCurrentCommand(subsystem.getDefaultCommand()); // Start at default command
+                }
             }
 
             // Run through loop tasks of subsystem
