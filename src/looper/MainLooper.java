@@ -37,49 +37,65 @@ public class MainLooper extends TimerTask {
         // Run for every subsystem
         for(Subsystem subsystem : Subsystem.subsystems) {
             
-            boolean shouldSwitchToDefault = subsystem.getDefaultCommand().shouldSwitchToDefaultCommand()
-                    && subsystem.hasCommands();
-            boolean shouldSwitchToNext = subsystem.getCurrentCommand().isFinished();
-            if (shouldSwitchToDefault || shouldSwitchToNext) {
-                subsystem.setCurrentCommandState(Subsystem.ENDING);
-            }
-
-            // If the subsystem hasn't started
-            //      Run onStart
-            //      Switch state to RUNNING
-            if (subsystem.getCurrentCommandState() == Subsystem.NOT_STARTED) {
-                subsystem.getCurrentCommand().onStart();
-                subsystem.setCurrentCommandState(Subsystem.RUNNING);
-            }
-
-            // If the subsystem is running
-            //      Run onLoop
-            if (subsystem.getCurrentCommandState() == Subsystem.RUNNING) {
-                subsystem.getCurrentCommand().onLoop();
-            }
-
-            // If the subsystem is about to end
-            //      Run onEnd
-            //      Set current command to the default command
-            if (subsystem.getCurrentCommandState() == Subsystem.ENDING) {
-                subsystem.getCurrentCommand().onEnd();
+            // Only run through commands if robot is enabled
+            if (RobotMain.getInstance().isEnabled()) {
+                if (!subsystem.isEnabled())
+                    subsystem.enable();
                 
-                if (shouldSwitchToNext)
-                    subsystem.delCurCommand();
-                
-                if (!subsystem.hasCommands())
-                    shouldSwitchToDefault = true;
-                
-                if (shouldSwitchToDefault) {
-                    subsystem.delAllCommands();
-                    subsystem.setCurrentCommand(subsystem.getDefaultCommand());
-                } 
-                else if (shouldSwitchToNext) {
-                    subsystem.setCurrentCommand(subsystem.getNextCommand());
-                    subsystem.setCurrentCommandState(Subsystem.NOT_STARTED);
+                boolean shouldSwitchToDefault = subsystem.getDefaultCommand().shouldSwitchToDefaultCommand()
+                        && subsystem.hasCommands();
+                boolean shouldSwitchToNext = subsystem.getCurrentCommand().isFinished();
+                if (shouldSwitchToDefault || shouldSwitchToNext) {
+                    subsystem.setCurrentCommandState(Subsystem.ENDING);
                 }
-                else{
-                    System.err.println("Command ending without another command to switch to");
+
+                // If the subsystem hasn't started
+                //      Run onStart
+                //      Switch state to RUNNING
+                if (subsystem.getCurrentCommandState() == Subsystem.NOT_STARTED) {
+                    subsystem.getCurrentCommand().onStart();
+                    subsystem.setCurrentCommandState(Subsystem.RUNNING);
+                }
+
+                // If the subsystem is running
+                //      Run onLoop
+                if (subsystem.getCurrentCommandState() == Subsystem.RUNNING) {
+                    subsystem.getCurrentCommand().onLoop();
+                }
+
+                // If the subsystem is about to end
+                //      Run onEnd
+                //      Set current command to the default command
+                if (subsystem.getCurrentCommandState() == Subsystem.ENDING) {
+                    subsystem.getCurrentCommand().onEnd();
+
+                    if (shouldSwitchToNext)
+                        subsystem.delCurCommand();
+
+                    if (!subsystem.hasCommands())
+                        shouldSwitchToDefault = true;
+
+                    if (shouldSwitchToDefault) {
+                        subsystem.delAllCommands();
+                        subsystem.setCurrentCommand(subsystem.getDefaultCommand());
+                    } 
+                    else if (shouldSwitchToNext) {
+                        subsystem.setCurrentCommand(subsystem.getNextCommand());
+                        subsystem.setCurrentCommandState(Subsystem.NOT_STARTED);
+                    }
+                    else{
+                        System.err.println("Command ending without another command to switch to");
+                    }
+                }
+                
+            }
+            
+            // Robot is not enabled
+            else {
+                if (subsystem.isEnabled()) {
+                    subsystem.disable();        // Make sure to disable subsystem
+                    subsystem.delAllCommands(); // Clear the command queue so default is next
+                    subsystem.setCurrentCommand(subsystem.getDefaultCommand()); // Start at default command
                 }
             }
 
@@ -87,6 +103,7 @@ public class MainLooper extends TimerTask {
             subsystem.loopTasks();
         }
 
+        RobotMain.getInstance().mainLoopTasks();
     }
 }
 

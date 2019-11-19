@@ -1,6 +1,7 @@
 package subsystems.driveTrain;
 
 import looper.Subsystem;
+import subsystems.EnabledSubsystems;
 
 /**
  *  Contains all elements of the drive train.
@@ -17,17 +18,14 @@ public class DriveTrain extends Subsystem {
     /// DECLARATIONS ///
     ////////////////////
 
-    /* TalonSRX controllers are named with 2 identifiers:
-            Top/Bot: Whether the controller controls a top or bottom gear
-            #: Which wheel number the controller corresponds to. Due to swerve nature,
-                there is never a consistent front/back or left/right. Wheel numbers must
-                be used instead.
-    */
-
     private static DriveTrain singleton;
 
+    // Check whether subsystem is currently enabled
+    private boolean currEnabled = false;
+    
     // Constructor
     private DriveTrain() {
+        super(EnabledSubsystems.DRIVE_ENABLED);
     }
 
     public static DriveTrain getInstance() {
@@ -47,14 +45,19 @@ public class DriveTrain extends Subsystem {
 
     @Override
     public void enable() {
-
+        currEnabled = true;
+    }
+    
+    @Override
+    public void disable() {
+        currEnabled = false;
     }
 
     @Override
-    public void disable() {
-
+    public boolean isEnabled() {
+        return currEnabled;
     }
-
+    
     @Override
     public void loopTasks() {
 

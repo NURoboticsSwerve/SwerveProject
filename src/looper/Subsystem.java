@@ -18,17 +18,23 @@ public abstract class Subsystem {
     public static ArrayList<Subsystem> subsystems = new ArrayList<Subsystem>();
 
     // Add this class to the list of all subsystems
-    public Subsystem() {
-        subsystems.add(this);
+    public Subsystem(boolean enabled) {
+        if (enabled)
+            subsystems.add(this);
     }
-
+    
     // Queues for commands
     private ArrayList<Command> commandQueue = new ArrayList<>();
     
-    // Enable and Disable classes must exist
+    // Enable each subsystem once robot enabled
     public abstract void enable();
+    
+    // Disable function for each subsystem must exist
     public abstract void disable();
 
+    // Return whether subsystem is enabled
+    public abstract boolean isEnabled();
+    
     // Called every loop of the code
     // Contains anything that a subsystem needs to run every loop
     public abstract void loopTasks();
@@ -62,7 +68,6 @@ public abstract class Subsystem {
      */
     public void setCurrentCommand(Command command) {
         if (command.getSubsystem() instanceof Subsystem) {
-            this.currentCommand.onEnd();
             this.currentCommand = command;
             setCurrentCommandState(NOT_STARTED);
         }
