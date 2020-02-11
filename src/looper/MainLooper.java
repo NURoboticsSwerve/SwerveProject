@@ -34,11 +34,12 @@ public class MainLooper extends TimerTask {
     @Override
     public void run() {
 
-        // Run for every subsystem
-        for(Subsystem subsystem : Subsystem.subsystems) {
-            
-            // Only run through commands if robot is enabled
-            if (RobotMain.getInstance().isEnabled()) {
+        // Only run through commands if robot is enabled
+        if (RobotMain.getInstance().isEnabled()) {
+
+            // Run for every subsystem
+            for(Subsystem subsystem : Subsystem.subsystems) {
+
                 if (!subsystem.isEnabled())
                     subsystem.enable();
                 
